@@ -50,7 +50,7 @@ resource "aws_route_table_association" "route_association" {
 #SG linux jump server
 resource "aws_security_group" "sg-linuxjumpserv" {
     vpc_id = aws_vpc.vpc_act3.id #vpc id
-    name = "sg-linux-jumpserver"
+    name = "SG-linux-jumpserver"
     description = "Security group for Linux Jump Server"
 
     #ssh ingress and egress rules
@@ -75,7 +75,7 @@ resource "aws_security_group" "sg-linuxjumpserv" {
 
 resource "aws_security_group" "sg-linux_webserver_1" {
   vpc_id = aws_vpc.vpc_act3.id #vpc id
-  name = "sg-linux-webserver-1"
+  name = "SG-linux-webserver-1"
   description = "Security group for Linux Web Server 1"
   ingress {
     from_port = 22
@@ -104,7 +104,7 @@ resource "aws_security_group" "sg-linux_webserver_1" {
 #SG web server 2
 resource "aws_security_group" "sg-linux_webserver_2" {
   vpc_id = aws_vpc.vpc_act3.id #vpc id
-  name = "sg-linux-webserver-2"
+  name = "SG-linux-webserver-2"
   description = "Security group for Linux Web Server 2"
   ingress {
     from_port = 22
@@ -134,7 +134,7 @@ resource "aws_security_group" "sg-linux_webserver_2" {
 #SG web server 3
 resource "aws_security_group" "sg-linux_webserver_3" {
   vpc_id = aws_vpc.vpc_act3.id #vpc id
-  name = "sg-linux-webserver-3"
+  name = "SG-linux-webserver-3"
   description = "Security group for Linux Web Server 3"
   ingress {
     from_port = 22
@@ -167,7 +167,7 @@ resource "aws_instance" "linux-jumpserver" {
     ami = "ami-084568db4383264d4" #amazon linux 2
     instance_type = "t2.micro"
     subnet_id = aws_subnet.public_subnet.id #subnet id
-    security_groups = [aws_security_group.sg-linuxjumpserv.name] #security group name
+    vpc_security_group_ids = [aws_security_group.sg-linuxjumpserv.id] #security group name
     key_name = "vockey" #key pair name
     associate_public_ip_address = true
     tags = {
@@ -179,7 +179,7 @@ resource "aws_instance" "linux-webserver-1" {
     ami = "ami-084568db4383264d4" #amazon linux 2
     instance_type = "t2.micro"
     subnet_id = aws_subnet.public_subnet.id #subnet id
-    security_groups = [aws_security_group.sg-linux_webserver_1.name] #security group name
+    vpc_security_group_ids = [aws_security_group.sg-linux_webserver_1.id] #security group name
     key_name = "vockey" #key pair name
     associate_public_ip_address = true
     tags = {
@@ -191,7 +191,7 @@ resource "aws_instance" "linux-webserver-2" {
     ami = "ami-084568db4383264d4" #amazon linux 2
     instance_type = "t2.micro"
     subnet_id = aws_subnet.public_subnet.id #subnet id
-    security_groups = [aws_security_group.sg-linux_webserver_2.name] #security group name
+    vpc_security_group_ids = [aws_security_group.sg-linux_webserver_2.id] #security group name
     key_name = "vockey" #key pair name
     associate_public_ip_address = true
     tags = {
@@ -203,7 +203,7 @@ resource "aws_instance" "linux-webserver-3" {
     ami = "ami-084568db4383264d4" #amazon linux 2
     instance_type = "t2.micro"
     subnet_id = aws_subnet.public_subnet.id #subnet id
-    security_groups = [aws_security_group.sg-linux_webserver_3.name] #security group name
+    vpc_security_group_ids = [aws_security_group.sg-linux_webserver_3.id] #security group name
     key_name = "vockey" #key pair name
     associate_public_ip_address = true
     tags = {
@@ -211,6 +211,9 @@ resource "aws_instance" "linux-webserver-3" {
     }
   
 }
+
+
+
 #output
 output "linux-jumpserver_public_ip" {
     value = aws_instance.linux-jumpserver.public_ip
